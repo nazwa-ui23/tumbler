@@ -253,7 +253,7 @@ function renderProductDetailPage(id) {
             <p style="margin-top:4px; color:#555; line-height:1.4;">${product.desc}</p>
         </div>
 
-        <div style="border-top:1px solid #eee; padding-top:12px; margin-bottom:80px;">
+        <div style="border-top:1px solid #eee; padding-top:12px; margin-bottom:40px;">
             <div style="font-size:0.85rem; font-weight:bold; color:#333; margin-bottom:10px;">⭐ ${product.rating} Penilaian Produk (295)</div>
             <div style="display:flex; gap:10px; align-items:center; margin-bottom:6px;">
                 <div style="width:28px; height:28px; border-radius:50%; background:#2a9d8f; color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:bold;">Z</div>
@@ -263,14 +263,15 @@ function renderProductDetailPage(id) {
             <p style="font-size:0.8rem; color:#555; line-height:1.3;">Sepatunya sangat bagus dan pas di kaki. Bantalannya empuk banget dipake seharian, recommended seller!</p>
         </div>
 
-        <div style="position:fixed; bottom:60px; left:0; right:0; max-width:500px; margin:0 auto; background:#fff; padding:10px 15px; border-top:1px solid #eee; display:flex; gap:10px; z-index:90;">
+        <!-- BAR TOMBOL MENEMPEL DI BOTTOM 0 (PAS DI BAWAH LAYAR) -->
+        <div style="position:fixed; bottom:0; left:0; right:0; max-width:500px; margin:0 auto; background:#fff; padding:12px 15px; border-top:1px solid #eee; display:flex; gap:10px; z-index:100; box-shadow: 0 -2px 10px rgba(0,0,0,0.05);">
             <button class="btn btn-cart" style="flex:1; padding:12px; font-size:0.85rem;" onclick="openVariantSheet('cart')"><i class="fas fa-cart-plus"></i> + Keranjang</button>
-            <button class="btn btn-buy" style="flex:1; padding:12px; font-size:0.85rem; background:#1b4332;" onclick="openVariantSheet('buy')">Beli Sekarang</button>
+            <button class="btn btn-buy" style="flex:1; padding:12px; font-size:0.85rem; background:#004b36;" onclick="openVariantSheet('buy')">Beli Sekarang</button>
         </div>
     `;
 }
 
-/* 2. POPUP SETENGAH LAYAR DIBAWAH */
+/* 2. POPUP SETENGAH LAYAR DI BAWAH */
 function openVariantSheet(mode) {
     if (!selectedDetailProduct) return;
     const overlay = document.getElementById('variant-sheet-overlay');
