@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZARIYA - Dashboard Admin</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header id="main-header">
+        <h1>AZARIYA</h1>
+        <div class="admin-nav-bar" id="admin-top-logout">
+            <button class="btn-admin-logout" onclick="adminLogout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <div id="admin-dashboard-view" class="page-view active">
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: 0 auto 15px auto;">
+            <button class="btn-back-nav" onclick="window.location.href='admin-menu.html'">
+                <i class="fas fa-arrow-left"></i> Sebelumnya
+            </button>
+            <span style="font-size: 0.9rem; font-weight: bold; color: var(--dark-green);">Dashboard Admin</span>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
+            <button class="admin-sub-btn" id="btn-tab-input" onclick="switchAdminDashTab('input')">
+                <i class="fas fa-plus-circle"></i> Input Barang
+            </button>
+            <button class="admin-sub-btn" id="btn-tab-view" style="background-color: var(--accent-green);" onclick="switchAdminDashTab('view')">
+                <i class="fas fa-boxes"></i> View Produk
+            </button>
+        </div>
+
+        <div id="admin-sub-input" class="admin-card-container">
+            <h3 style="color: var(--dark-green); margin-bottom: 15px; font-size: 1.1rem; text-align: center;">
+                <i class="fas fa-box-open"></i> Form Input Barang Baru
+            </h3>
+            <form onsubmit="handleAdminAddProduct(event)">
+                <div class="form-group">
+                    <label>Upload Foto Produk (Dari Galeri):</label>
+                    <input type="file" id="admin-prod-file" accept="image/*" class="form-input" onchange="previewUploadImage(event)" required>
+                    <div class="preview-img-box" id="preview-container">
+                        <span style="color: var(--text-muted); font-size: 0.75rem;" id="preview-text">Pratinjau foto dari galeri akan muncul di sini</span>
+                        <img id="preview-img" src="" alt="Pratinjau" style="display: none;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="admin-prod-name">Nama Produk Sepatu:</label>
+                    <input type="text" id="admin-prod-name" class="form-input" placeholder="contoh: Nike Air Jordan 1 Retro" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin-prod-price">Harga Produk (Rp):</label>
+                    <input type="number" id="admin-prod-price" class="form-input" placeholder="contoh: 2500000" min="1000" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin-prod-desc">Deskripsi Produk:</label>
+                    <textarea id="admin-prod-desc" class="form-input" rows="3" placeholder="Masukkan deskripsi keunggulan dan bahan sepatu..." style="resize: vertical; font-family: inherit;" required></textarea>
+                </div>
+                <button type="submit" class="btn-auth" style="background-color: var(--dark-green);">
+                    <i class="fas fa-upload"></i> Tambahkan Barang ke Toko
+                </button>
+            </form>
+        </div>
+
+        <div id="admin-sub-view" class="admin-card-container" style="display: none;">
+            <h3 style="color: var(--dark-green); margin-bottom: 15px; font-size: 1.1rem; text-align: center;">
+                <i class="fas fa-list"></i> Daftar Seluruh Produk Toko
+            </h3>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Foto</th>
+                            <th>Nama Produk</th>
+                            <th>Harga</th>
+                            <th>Terjual</th>
+                            <th>Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-product-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL KONFIRMASI LOGOUT ADMIN -->
+    <div id="admin-logout-modal" class="auth-overlay">
+        <div class="auth-card" style="max-width: 350px;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 2.8rem; color: #e63946; margin-bottom: 12px;"></i>
+            <h2 style="font-size: 1.3rem;">Konfirmasi Keluar Admin</h2>
+            <p style="margin-bottom: 20px;">Apakah kamu yakin ingin keluar dari akun admin ini?</p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-auth" style="background-color: #8cae96; margin-top: 0;" onclick="closeAdminLogoutModal()">Batal</button>
+                <button class="btn-auth" style="background-color: #e63946; margin-top: 0;" onclick="confirmAdminLogout()">Yakin</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderAdminProductTable();
+        });
+    </script>
+</body>
+</html>
