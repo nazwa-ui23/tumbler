@@ -7,7 +7,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* CSS Popup Bottom Sheet */
         .bottom-sheet-overlay {
             position: fixed;
             top: 0;
@@ -64,10 +63,8 @@
         <h1>AZARIYA</h1>
     </header>
 
-    <!-- Halaman Detail Utama (Tampilan Gambar 2) -->
     <div style="padding: 15px; max-width: 500px; margin: 0 auto; background: #fff;" id="detail-card-content"></div>
 
-    <!-- Popup Half Screen / Bottom Sheet (Tampilan Gambar 1) -->
     <div id="variant-sheet-overlay" class="bottom-sheet-overlay" onclick="closeVariantSheet(event)">
         <div class="bottom-sheet-content" onclick="event.stopPropagation();">
             <button class="close-sheet-btn" onclick="closeVariantSheet()">&times;</button>
@@ -75,7 +72,6 @@
         </div>
     </div>
 
-    <!-- Navigation Bar Bawah -->
     <nav id="bottom-nav">
         <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
         <a href="cart.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Keranjang</span></a>
@@ -83,7 +79,8 @@
         <a href="orders.html" class="nav-item"><i class="fas fa-box"></i><span>Pesanan</span></a>
     </nav>
 
-    <script src="app.js"></script>
+    <!-- Versi v=2 dipasang agar browser memperbarui cache -->
+    <script src="app.js?v=2"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let id = parseInt(localStorage.getItem('selectedProductId'));
