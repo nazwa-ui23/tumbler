@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZARIYA - Keranjang Saya</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header id="main-header">
+        <h1>AZARIYA</h1>
+    </header>
+
+    <div id="view-cart" class="page-view active">
+        <div class="section-title"><i class="fas fa-shopping-bag"></i> Keranjang Saya</div>
+        <div id="cart-items-container" style="max-width: 800px; margin: 0 auto;"></div>
+        <div class="cart-footer">
+            <div style="flex-shrink: 0;">
+                <span style="font-size: 0.75rem; color: var(--text-muted);" id="cart-ongkir-label">Total (Inc. Ongkir Rp 5.000):</span>
+                <div id="cart-total-price" style="font-size: 0.95rem; font-weight: bold; color: var(--dark-green);">Rp 0</div>
+            </div>
+            <button class="btn btn-buy" style="padding: 10px 16px; flex: initial; min-width: 120px;" onclick="goToCheckoutFromCart()">Lanjut Bayar</button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav" id="buyer-bottom-nav">
+        <button class="nav-item" onclick="window.location.href='home.html'">
+            <i class="fas fa-home"></i>
+            <span>Beranda</span>
+        </button>
+        <button class="nav-item active" onclick="window.location.href='cart.html'" style="position: relative;">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Keranjang</span>
+            <span class="badge-count" id="cart-badge" style="display:none;">0</span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='profile.html'">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='orders.html'">
+            <i class="fas fa-box"></i>
+            <span>Pesanan</span>
+        </button>
+    </nav>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderCart();
+            updateCartBadge();
+        });
+    </script>
+</body>
+</html>
