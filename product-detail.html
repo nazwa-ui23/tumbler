@@ -6,6 +6,57 @@
     <title>AZARIYA - Detail Produk</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* CSS Popup Bottom Sheet */
+        .bottom-sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bottom-sheet-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .bottom-sheet-content {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px 16px 0 0;
+            padding: 20px;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+        }
+
+        .bottom-sheet-overlay.active .bottom-sheet-content {
+            transform: translateY(0);
+        }
+
+        .close-sheet-btn {
+            position: absolute;
+            top: 12px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #888;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <header id="main-header" style="position: relative;">
@@ -13,9 +64,24 @@
         <h1>AZARIYA</h1>
     </header>
 
-    <div style="padding: 15px; max-width: 500px; margin: 0 auto; background: #fff;" id="detail-card-content">
-        <!-- Konten dirender otomatis oleh app.js -->
+    <!-- Halaman Detail Utama (Tampilan Gambar 2) -->
+    <div style="padding: 15px; max-width: 500px; margin: 0 auto; background: #fff;" id="detail-card-content"></div>
+
+    <!-- Popup Half Screen / Bottom Sheet (Tampilan Gambar 1) -->
+    <div id="variant-sheet-overlay" class="bottom-sheet-overlay" onclick="closeVariantSheet(event)">
+        <div class="bottom-sheet-content" onclick="event.stopPropagation();">
+            <button class="close-sheet-btn" onclick="closeVariantSheet()">&times;</button>
+            <div id="sheet-modal-body"></div>
+        </div>
     </div>
+
+    <!-- Navigation Bar Bawah -->
+    <nav id="bottom-nav">
+        <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
+        <a href="cart.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Keranjang</span></a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user"></i><span>Profil</span></a>
+        <a href="orders.html" class="nav-item"><i class="fas fa-box"></i><span>Pesanan</span></a>
+    </nav>
 
     <script src="app.js"></script>
     <script>
