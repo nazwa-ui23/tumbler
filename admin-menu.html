@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZARIYA - Menu Admin</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header id="main-header">
+        <h1>AZARIYA</h1>
+        <div class="admin-nav-bar" id="admin-top-logout">
+            <button class="btn-admin-logout" onclick="adminLogout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <div id="admin-main-menu" class="page-view active">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 65vh; text-align: center;">
+            <p style="font-size: 1.2rem; color: var(--dark-green); font-weight: 700; margin-bottom: 25px;">
+                Silakan pilih salah satu menu
+            </p>
+            <button class="admin-big-btn" onclick="window.location.href='admin-dashboard.html'">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </button>
+            <button class="admin-big-btn" onclick="window.location.href='admin-reports.html'">
+                <i class="fas fa-file-invoice-dollar"></i> Laporan
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL KONFIRMASI LOGOUT ADMIN -->
+    <div id="admin-logout-modal" class="auth-overlay">
+        <div class="auth-card" style="max-width: 350px;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 2.8rem; color: #e63946; margin-bottom: 12px;"></i>
+            <h2 style="font-size: 1.3rem;">Konfirmasi Keluar Admin</h2>
+            <p style="margin-bottom: 20px;">Apakah kamu yakin ingin keluar dari akun admin ini?</p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-auth" style="background-color: #8cae96; margin-top: 0;" onclick="closeAdminLogoutModal()">Batal</button>
+                <button class="btn-auth" style="background-color: #e63946; margin-top: 0;" onclick="confirmAdminLogout()">Yakin</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
