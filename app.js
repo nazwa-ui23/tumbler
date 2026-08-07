@@ -1,4 +1,5 @@
 const SHIPPING_FEE = 5000;
+let currentPaymentMethod = "COD";
 
 let defaultProfile = {
     email: "azariya.azariya@email.com",
@@ -240,7 +241,7 @@ function renderProductDetailPage(id) {
 
         <div class="detail-info-box">
             <div>🚚 <strong>Estimasi Pengiriman:</strong> 8 - 10 Ags • Bebas Pengembalian</div>
-            <div style="margin-top: 5px;">💳 <strong>Metode Pembayaran hanya bisa COD:</strong> Bayar di Tempat (COD) </div>
+            <div style="margin-top: 5px;">💳 <strong>Metode Pembayaran:</strong> COD &amp; QRIS</div>
         </div>
 
         <div class="detail-info-box">
@@ -293,7 +294,8 @@ function addToCartFromDetail() {
         selected: true
     });
     saveCart(cart);
-    alert("Produk berhasil ditambahkan ke keranjang!");
+    updateCartBadge();
+    // ALERT DIHAPUS SESUAI REVISI 1
 }
 
 function directBuyFromDetail() {
@@ -315,7 +317,7 @@ function addToCart(id) {
     });
     saveCart(cart);
     updateCartBadge();
-    alert("Berhasil dimasukkan ke keranjang!");
+    // ALERT DIHAPUS SESUAI REVISI 1
 }
 
 function updateCartBadge() {
@@ -423,6 +425,30 @@ function goToCheckoutFromCart() {
     window.location.href = 'checkout.html';
 }
 
+function selectPaymentMethod(method) {
+    currentPaymentMethod = method;
+    const codBox = document.getElementById('pay-opt-cod');
+    const qrisBox = document.getElementById('pay-opt-qris');
+    const barcodeBox = document.getElementById('qris-barcode-box');
+    const btnSubmit = document.getElementById('btn-submit-checkout');
+
+    if (method === 'QRIS') {
+        qrisBox.style.border = '2px solid var(--primary-green)';
+        qrisBox.style.background = 'var(--light-green)';
+        codBox.style.border = '2px solid #ddd';
+        codBox.style.background = '#ffffff';
+        barcodeBox.style.display = 'block';
+        btnSubmit.innerHTML = `<i class="fas fa-check-circle"></i> Selesai`;
+    } else {
+        codBox.style.border = '2px solid var(--primary-green)';
+        codBox.style.background = 'var(--light-green)';
+        qrisBox.style.border = '2px solid #ddd';
+        qrisBox.style.background = '#ffffff';
+        barcodeBox.style.display = 'none';
+        btnSubmit.innerHTML = `<i class="fas fa-check-circle"></i> Klik Checkout`;
+    }
+}
+
 function openCheckoutPage() {
     let checkoutItems = JSON.parse(localStorage.getItem('checkoutItems')) || [];
     const container = document.getElementById('checkout-summary-items');
@@ -457,6 +483,7 @@ function processCheckout() {
         id: "AZR-" + Math.floor(100000 + Math.random() * 900000),
         items: [...checkoutItems],
         total: grandTotal,
+        paymentMethod: currentPaymentMethod,
         status: "Dikemas",
         date: new Date().toLocaleDateString('id-ID')
     });
@@ -481,6 +508,7 @@ function renderOrders() {
     container.innerHTML = '';
     myOrders.forEach(order => {
         let itemNames = order.items.map(i => i.name).join(', ');
+        let payLabel = order.paymentMethod || "COD";
         container.innerHTML += `
             <div class="order-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -488,7 +516,7 @@ function renderOrders() {
                     <span class="order-status-badge"><i class="fas fa-box"></i> ${order.status}</span>
                 </div>
                 <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">${itemNames} (Inc. Ongkir Rp 5.000)</div>
-                <div style="font-size:0.85rem; font-weight:bold; color:var(--dark-green);">${formatRupiah(order.total)} (COD)</div>
+                <div style="font-size:0.85rem; font-weight:bold; color:var(--dark-green);">${formatRupiah(order.total)} (${payLabel})</div>
             </div>
         `;
     });
