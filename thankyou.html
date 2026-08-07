@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AZARIYA - Pesanan Diproses</title>
+    <title>AZARIYA - Terima Kasih</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,17 +12,29 @@
         <h1>AZARIYA</h1>
     </header>
 
-    <div id="view-thankyou" class="page-view active">
-        <div class="thank-you-screen">
-            <i class="fas fa-heart"></i>
-            <h2 style="color: var(--dark-green); margin-bottom: 10px;">Terima kasih telah berbelanja</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
-                Pesananmu dengan metode <strong>COD</strong> sedang diproses dan akan segera dikirim ke alamatmu.
-            </p>
-            <button class="btn btn-buy" style="margin: 0 auto; padding: 10px 20px;" onclick="window.location.href='orders.html'">
-                Lihat Status Pesanan
-            </button>
-        </div>
+    <div class="auth-card" style="margin: 40px auto; max-width: 400px; padding: 30px 20px; text-align: center;">
+        <i class="fas fa-heart" style="font-size: 3.5rem; color: var(--dark-green); margin-bottom: 20px;"></i>
+        <h2 style="color: var(--dark-green); font-size: 1.5rem; margin-bottom: 15px;">Terima kasih telah berbelanja</h2>
+        <p style="font-size: 0.9rem; color: #555; margin-bottom: 25px; line-height: 1.5;">
+            Pesananmu dengan metode <strong id="display-payment-method">COD</strong> sedang diproses dan akan segera dikirim ke alamatmu.
+        </p>
+        <button class="btn btn-buy" style="width: auto; padding: 10px 20px; font-size: 0.9rem;" onclick="window.location.href='orders.html'">
+            Lihat Status Pesanan
+        </button>
     </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let orders = JSON.parse(localStorage.getItem('myOrders')) || [];
+            if (orders.length > 0) {
+                let latestOrder = orders[0];
+                let payMethodEl = document.getElementById('display-payment-method');
+                if (payMethodEl && latestOrder.paymentMethod) {
+                    payMethodEl.innerText = latestOrder.paymentMethod;
+                }
+            }
+        });
+    </script>
 </body>
 </html>
