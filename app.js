@@ -202,7 +202,7 @@ function openProductDetail(id) {
     window.location.href = 'product-detail.html';
 }
 
-/* 1. TAMPILAN DETAIL UTAMA (GAMBAR 2) */
+/* 1. HALAMAN DETAIL UTAMA */
 function renderProductDetailPage(id) {
     products = getStoredProducts();
     const product = products.find(p => p.id === id);
@@ -270,7 +270,7 @@ function renderProductDetailPage(id) {
     `;
 }
 
-/* 2. POPUP SETENGAH LAYAR (GAMBAR 1) */
+/* 2. POPUP SETENGAH LAYAR DIBAWAH */
 function openVariantSheet(mode) {
     if (!selectedDetailProduct) return;
     const overlay = document.getElementById('variant-sheet-overlay');
