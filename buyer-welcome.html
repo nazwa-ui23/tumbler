@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZARIYA - Selamat Datang</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="auth-step-welcome" class="auth-overlay active">
+        <div class="auth-card welcome-text" style="padding: 40px 20px;">
+            <i class="fas fa-check-circle" style="font-size: 3.5rem; color: var(--primary-green); margin-bottom: 15px;"></i>
+            <h2 id="welcome-user-name" style="font-size: 1.6rem; color: var(--dark-green); margin-bottom: 10px;">Selamat datang di toko azariya!</h2>
+            <p style="margin-bottom: 25px;">Nikmati pengalaman belanja sepatu premium terbaik pilihanmu.</p>
+            <button class="btn-auth" onclick="window.location.href='home.html'">Masuk ke Beranda <i class="fas fa-shopping-bag"></i></button>
+        </div>
+    </div>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let user = JSON.parse(localStorage.getItem('userProfile'));
+            if(user && user.username) {
+                document.getElementById('welcome-user-name').innerText = `Selamat datang di toko azariya, ${user.username}!`;
+            }
+        });
+    </script>
+</body>
+</html>
