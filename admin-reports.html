@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZARIYA - Laporan Penjualan</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header id="main-header">
+        <h1>AZARIYA</h1>
+        <div class="admin-nav-bar" id="admin-top-logout">
+            <button class="btn-admin-logout" onclick="adminLogout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <div id="admin-reports-view" class="page-view active">
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: 0 auto 15px auto;">
+            <button class="btn-back-nav" onclick="window.location.href='admin-menu.html'">
+                <i class="fas fa-arrow-left"></i> Sebelumnya
+            </button>
+            <span style="font-size: 0.9rem; font-weight: bold; color: var(--dark-green);">Laporan Penjualan</span>
+        </div>
+
+        <p style="text-align: center; font-size: 1rem; color: var(--dark-green); font-weight: 600; margin-bottom: 15px;">
+            Pilih Jenis Laporan Penjualan:
+        </p>
+
+        <div class="report-btn-group">
+            <button class="admin-sub-btn" style="width: 100%;" onclick="showReportType('harian')">
+                <i class="fas fa-calendar-day"></i> Laporan Harian
+            </button>
+            <div class="report-btn-row">
+                <button class="admin-sub-btn" style="flex: 1;" onclick="showReportType('bulanan')">
+                    <i class="fas fa-calendar-alt"></i> Laporan Bulanan
+                </button>
+                <button class="admin-sub-btn" style="flex: 1; background-color: var(--primary-green);" onclick="showReportType('tahunan')">
+                    <i class="fas fa-chart-line"></i> Laporan Tahunan
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-card-container" id="report-result-box">
+            <h4 id="report-title" style="color: var(--dark-green); text-align: center; margin-bottom: 10px;">
+                Laporan Harian Penjualan
+            </h4>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Periode</th>
+                            <th>Total Transaksi</th>
+                            <th>Total Pendapatan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="report-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL KONFIRMASI LOGOUT ADMIN -->
+    <div id="admin-logout-modal" class="auth-overlay">
+        <div class="auth-card" style="max-width: 350px;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 2.8rem; color: #e63946; margin-bottom: 12px;"></i>
+            <h2 style="font-size: 1.3rem;">Konfirmasi Keluar Admin</h2>
+            <p style="margin-bottom: 20px;">Apakah kamu yakin ingin keluar dari akun admin ini?</p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-auth" style="background-color: #8cae96; margin-top: 0;" onclick="closeAdminLogoutModal()">Batal</button>
+                <button class="btn-auth" style="background-color: #e63946; margin-top: 0;" onclick="confirmAdminLogout()">Yakin</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            showReportType('harian');
+        });
+    </script>
+</body>
+</html>
