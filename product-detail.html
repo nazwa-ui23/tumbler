@@ -8,23 +8,21 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header id="main-header">
+    <header id="main-header" style="position: relative;">
+        <a href="home.html" style="color: white; position: absolute; left: 15px; top: 18px; font-size: 1.2rem;"><i class="fas fa-arrow-left"></i></a>
         <h1>AZARIYA</h1>
     </header>
 
-    <div id="view-product-detail" class="page-view active">
-        <button class="btn-back-nav" onclick="window.location.href='home.html'">
-            <i class="fas fa-arrow-left"></i> Kembali ke Beranda
-        </button>
-        <div class="detail-card" id="detail-card-content"></div>
+    <div style="padding: 15px; max-width: 500px; margin: 0 auto; background: #fff;" id="detail-card-content">
+        <!-- Konten dirender otomatis oleh app.js -->
     </div>
 
     <script src="app.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            let selectedId = localStorage.getItem('selectedProductId');
-            if(selectedId) {
-                renderProductDetailPage(parseInt(selectedId));
+            let id = parseInt(localStorage.getItem('selectedProductId'));
+            if (id) {
+                renderProductDetailPage(id);
             }
         });
     </script>
