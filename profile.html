@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZARIYA - Profil Saya</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header id="main-header">
+        <h1>AZARIYA</h1>
+    </header>
+
+    <div id="view-profile" class="page-view active">
+        <div class="section-title" style="justify-content: center;"><i class="fas fa-user-circle"></i> Profil Saya</div>
+        <div class="profile-card">
+            <div class="profile-header-bg"></div>
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&q=80" alt="Foto Profil" class="profile-img">
+            <h3 style="color: var(--dark-green); margin-bottom: 2px;" id="profile-display-name">Azariya</h3>
+            <span class="profile-badge"><i class="fas fa-crown"></i> VIP Member</span>
+
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Beli</div>
+                </div>
+                <div class="stat-item" style="border-left: 1px solid #ddd; border-right: 1px solid #ddd; padding: 0 15px;">
+                    <div class="stat-value">Aktif</div>
+                    <div class="stat-label">Status COD</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Terverifikasi</div>
+                </div>
+            </div>
+
+            <div class="profile-info-group">
+                <div class="info-row">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <div class="profile-label">Email</div>
+                        <div class="profile-value" id="profile-display-email">azariya.azariya@email.com</div>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <i class="fas fa-phone-alt"></i>
+                    <div>
+                        <div class="profile-label">Nomor Telepon</div>
+                        <div class="profile-value" id="profile-display-phone">+62 812-3456-7890</div>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <div class="profile-label">Alamat Utama Pengiriman</div>
+                        <div class="profile-value" id="profile-display-address">Jl. Cempaka Indah No. 45, Komplek Green Residence, Jakarta Selatan, 12410</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-logout" onclick="showLogoutModal()">
+                <i class="fas fa-sign-out-alt"></i> Keluar (Logout)
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL KONFIRMASI LOGOUT PEMBELI -->
+    <div id="logout-modal" class="auth-overlay">
+        <div class="auth-card" style="max-width: 350px;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 2.8rem; color: #e63946; margin-bottom: 12px;"></i>
+            <h2 style="font-size: 1.3rem;">Konfirmasi Keluar</h2>
+            <p style="margin-bottom: 20px;">Apakah kamu yakin ingin keluar dari akun ini?</p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-auth" style="background-color: #8cae96; margin-top: 0;" onclick="closeLogoutModal()">Batal</button>
+                <button class="btn-auth" style="background-color: #e63946; margin-top: 0;" onclick="confirmLogout()">Yakin</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav" id="buyer-bottom-nav">
+        <button class="nav-item" onclick="window.location.href='home.html'">
+            <i class="fas fa-home"></i>
+            <span>Beranda</span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='cart.html'" style="position: relative;">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Keranjang</span>
+            <span class="badge-count" id="cart-badge" style="display:none;">0</span>
+        </button>
+        <button class="nav-item active" onclick="window.location.href='profile.html'">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='orders.html'">
+            <i class="fas fa-box"></i>
+            <span>Pesanan</span>
+        </button>
+    </nav>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            updateProfileUI();
+            updateCartBadge();
+        });
+    </script>
+</body>
+</html>
