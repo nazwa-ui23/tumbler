@@ -23,12 +23,28 @@
         </div>
         <div class="checkout-box">
             <strong>Metode Pembayaran:</strong>
-            <div class="payment-method">
-                <i class="fas fa-hand-holding-usd" style="font-size: 1.4rem;"></i>
-                <div>
-                    <div>Bayar di Tempat (COD)</div>
-                    <small style="font-weight: normal; font-size: 0.75rem; color: #444;">Bayar tunai saat sepatu sampai di rumah</small>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <div class="payment-method" id="pay-opt-cod" onclick="selectPaymentMethod('COD')" style="flex: 1; cursor: pointer; border: 2px solid var(--primary-green); background: var(--light-green); border-radius: 8px; padding: 10px;">
+                    <i class="fas fa-hand-holding-usd" style="font-size: 1.3rem;"></i>
+                    <div>
+                        <div>COD</div>
+                        <small style="font-size: 0.7rem; font-weight: normal; color: #444;">Bayar di Tempat</small>
+                    </div>
                 </div>
+                <div class="payment-method" id="pay-opt-qris" onclick="selectPaymentMethod('QRIS')" style="flex: 1; cursor: pointer; border: 2px solid #ddd; background: #ffffff; border-radius: 8px; padding: 10px;">
+                    <i class="fas fa-qrcode" style="font-size: 1.3rem; color: var(--dark-green);"></i>
+                    <div>
+                        <div>QRIS</div>
+                        <small style="font-size: 0.7rem; font-weight: normal; color: #444;">Scan Barcode</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAMPILAN BARCODE QRIS -->
+            <div id="qris-barcode-box" style="display: none; text-align: center; margin-top: 15px; padding: 15px; background: #fafafa; border: 1px dashed var(--accent-green); border-radius: 10px;">
+                <p style="font-size: 0.85rem; font-weight: bold; color: var(--dark-green); margin-bottom: 8px;">Scan QRIS Untuk Membayar:</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=AZARIYA-PREMIUM-SHOES" alt="Barcode QRIS" style="width: 160px; height: 160px; border: 1px solid #ddd; border-radius: 8px; padding: 5px; background: #fff;">
+                <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 8px;">Mendukung GoPay, OVO, Dana, ShopeePay, BCA, Mandiri, dll.</p>
             </div>
         </div>
         <div class="checkout-box">
@@ -44,7 +60,7 @@
                 <span id="checkout-total-price" style="color: var(--dark-green);">Rp 0</span>
             </div>
         </div>
-        <button class="btn btn-buy" style="width: 100%; padding: 12px; font-size: 0.9rem;" onclick="processCheckout()">
+        <button class="btn btn-buy" id="btn-submit-checkout" style="width: 100%; padding: 12px; font-size: 0.9rem;" onclick="processCheckout()">
             <i class="fas fa-check-circle"></i> Klik Checkout
         </button>
     </div>
