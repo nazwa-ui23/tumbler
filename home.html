@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZARIYA - Beranda</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header id="main-header">
+        <h1>AZARIYA</h1>
+    </header>
+
+    <div id="view-home" class="page-view active">
+        <div class="section-title"><i class="fas fa-fire"></i> Produk Bestseller</div>
+        <div class="bestseller-scroll" id="bestseller-grid"></div>
+
+        <div class="section-title"><i class="fas fa-shoe-prints"></i> Koleksi Pilihan</div>
+        <div class="product-grid" id="regular-grid"></div>
+    </div>
+
+    <nav class="bottom-nav" id="buyer-bottom-nav">
+        <button class="nav-item active" onclick="window.location.href='home.html'">
+            <i class="fas fa-home"></i>
+            <span>Beranda</span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='cart.html'" style="position: relative;">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Keranjang</span>
+            <span class="badge-count" id="cart-badge" style="display:none;">0</span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='profile.html'">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='orders.html'">
+            <i class="fas fa-box"></i>
+            <span>Pesanan</span>
+        </button>
+    </nav>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderProducts();
+            updateCartBadge();
+        });
+    </script>
+</body>
+</html>
