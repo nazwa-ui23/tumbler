@@ -202,12 +202,7 @@ function openProductDetail(id) {
     window.location.href = 'product-detail.html';
 }
 
-function changeQuantity(delta) {
-    selectedQuantity = Math.max(1, selectedQuantity + delta);
-    const qtyEl = document.getElementById('detail-quantity-val');
-    if (qtyEl) qtyEl.innerText = selectedQuantity;
-}
-
+/* 1. TAMPILAN DETAIL UTAMA (GAMBAR 2) */
 function renderProductDetailPage(id) {
     products = getStoredProducts();
     const product = products.find(p => p.id === id);
@@ -216,10 +211,73 @@ function renderProductDetailPage(id) {
     selectedDetailProduct = product;
     selectedColor = product.colors[0];
     selectedSize = product.sizes[0];
-    selectedQuantity = 1;
 
     const detailContainer = document.getElementById('detail-card-content');
     if (!detailContainer) return;
+
+    detailContainer.innerHTML = `
+        <div style="width:100%; border-radius:12px; overflow:hidden; margin-bottom:15px; border:1px solid #f0f0f0;">
+            <img src="${product.image}" alt="${product.name}" style="width:100%; height:auto; display:block;">
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span style="font-size:1.4rem; font-weight:bold; color:#e63946;">${formatRupiah(product.price)}</span>
+            <span style="font-size:0.8rem; color:#888;">${product.sold} Terjual</span>
+        </div>
+        <h2 style="font-size:1.1rem; color:#222; margin: 8px 0 15px 0;">${product.name}</h2>
+
+        <div class="option-group" style="margin-bottom:12px;">
+            <div class="option-label" style="font-size:0.85rem; font-weight:500; color:#555; margin-bottom:6px;">Pilih Warna:</div>
+            <div class="option-buttons" style="display:flex; gap:8px;">
+                ${product.colors.map((c, idx) => `
+                    <button class="opt-btn ${idx === 0 ? 'active' : ''}" onclick="selectColor('${c}', this)">${c}</button>
+                `).join('')}
+            </div>
+        </div>
+
+        <div class="option-group" style="margin-bottom:15px;">
+            <div class="option-label" style="font-size:0.85rem; font-weight:500; color:#555; margin-bottom:6px;">Pilih Ukuran (Size):</div>
+            <div class="option-buttons" style="display:flex; gap:8px; flex-wrap:wrap;">
+                ${product.sizes.map((s, idx) => `
+                    <button class="opt-btn ${idx === 0 ? 'active' : ''}" onclick="selectSize('${s}', this)">${s}</button>
+                `).join('')}
+            </div>
+        </div>
+
+        <div style="background:#f9f9f9; padding:10px 12px; border-radius:8px; font-size:0.8rem; color:#444; margin-bottom:15px; border:1px solid #eee;">
+            <div>🚚 <strong>Estimasi Pengiriman:</strong> 8 - 10 Ags • Bebas Pengembalian</div>
+            <div style="margin-top:4px;">💳 <strong>Metode Pembayaran:</strong> COD &amp; QRIS</div>
+        </div>
+
+        <div style="background:#f9f9f9; padding:10px 12px; border-radius:8px; font-size:0.8rem; color:#444; margin-bottom:15px; border:1px solid #eee;">
+            <strong>Deskripsi Produk:</strong>
+            <p style="margin-top:4px; color:#555; line-height:1.4;">${product.desc}</p>
+        </div>
+
+        <div style="border-top:1px solid #eee; padding-top:12px; margin-bottom:80px;">
+            <div style="font-size:0.85rem; font-weight:bold; color:#333; margin-bottom:10px;">⭐ ${product.rating} Penilaian Produk (295)</div>
+            <div style="display:flex; gap:10px; align-items:center; margin-bottom:6px;">
+                <div style="width:28px; height:28px; border-radius:50%; background:#2a9d8f; color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:bold;">Z</div>
+                <span style="font-size:0.8rem; font-weight:bold;">zaaaa396</span>
+            </div>
+            <div style="font-size:0.7rem; color:#888; margin-bottom:4px;">Variasi: ${product.colors[0]}, ${product.sizes[0]}</div>
+            <p style="font-size:0.8rem; color:#555; line-height:1.3;">Sepatunya sangat bagus dan pas di kaki. Bantalannya empuk banget dipake seharian, recommended seller!</p>
+        </div>
+
+        <div style="position:fixed; bottom:60px; left:0; right:0; max-width:500px; margin:0 auto; background:#fff; padding:10px 15px; border-top:1px solid #eee; display:flex; gap:10px; z-index:90;">
+            <button class="btn btn-cart" style="flex:1; padding:12px; font-size:0.85rem;" onclick="openVariantSheet('cart')"><i class="fas fa-cart-plus"></i> + Keranjang</button>
+            <button class="btn btn-buy" style="flex:1; padding:12px; font-size:0.85rem; background:#1b4332;" onclick="openVariantSheet('buy')">Beli Sekarang</button>
+        </div>
+    `;
+}
+
+/* 2. POPUP SETENGAH LAYAR (GAMBAR 1) */
+function openVariantSheet(mode) {
+    if (!selectedDetailProduct) return;
+    const overlay = document.getElementById('variant-sheet-overlay');
+    const sheetBody = document.getElementById('sheet-modal-body');
+    if (!overlay || !sheetBody) return;
+
+    selectedQuantity = 1;
 
     const sizeMap = {
         "EU:38": "EUR 38/24cm",
@@ -231,64 +289,77 @@ function renderProductDetailPage(id) {
         "EU:43": "EUR 43/27.5cm"
     };
 
-    const formattedSizes = product.sizes.map(s => sizeMap[s] || `${s}/25cm`);
+    const formattedSizes = selectedDetailProduct.sizes.map(s => sizeMap[s] || `${s}/25cm`);
 
-    detailContainer.innerHTML = `
-        <div style="display: flex; gap: 15px; padding: 10px 0; align-items: flex-start; border-bottom: 1px solid #f0f0f0;">
-            <div style="position: relative; width: 100px; height: 100px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; flex-shrink: 0;">
-                <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">
-                <i class="fas fa-expand-alt" style="position: absolute; top: 6px; right: 6px; font-size: 0.75rem; color: #666; background: rgba(255,255,255,0.85); padding: 4px; border-radius: 50%;"></i>
+    sheetBody.innerHTML = `
+        <div style="display: flex; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0; align-items: flex-start;">
+            <div style="position: relative; width: 90px; height: 90px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; flex-shrink: 0;">
+                <img src="${selectedDetailProduct.image}" style="width: 100%; height: 100%; object-fit: cover;">
+                <i class="fas fa-expand-alt" style="position: absolute; top: 5px; right: 5px; font-size: 0.7rem; color: #666; background: rgba(255,255,255,0.8); padding: 3px; border-radius: 50%;"></i>
             </div>
             <div style="flex: 1;">
-                <div style="display: flex; align-items: baseline; gap: 8px;">
-                    <span style="font-size: 1.3rem; font-weight: bold; color: #e63946;">${formatRupiah(product.price)}</span>
-                    <span style="font-size: 0.8rem; color: #aaa; text-decoration: line-through;">${formatRupiah(Math.round(product.price * 1.35))}</span>
+                <div style="display: flex; align-items: baseline; gap: 6px;">
+                    <span style="font-size: 1.25rem; font-weight: bold; color: #e63946;">${formatRupiah(selectedDetailProduct.price)}</span>
+                    <span style="font-size: 0.75rem; color: #aaa; text-decoration: line-through;">${formatRupiah(Math.round(selectedDetailProduct.price * 1.35))}</span>
                 </div>
                 <div style="font-size: 0.75rem; color: #e63946; font-weight: bold; margin-top: 2px;">Harga Flash Sale</div>
-                <div style="font-size: 0.8rem; color: #666; margin-top: 6px;">Stok: 31</div>
+                <div style="font-size: 0.78rem; color: #666; margin-top: 4px;">Stok: 31</div>
             </div>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 8px; padding: 12px 0; font-size: 0.85rem; color: #2a9d8f; font-weight: bold; border-bottom: 1px solid #f0f0f0;">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 10px 0; font-size: 0.82rem; color: #2a9d8f; font-weight: bold; border-bottom: 1px solid #f0f0f0;">
             <i class="fas fa-truck"></i> Besok
         </div>
 
-        <div class="option-group" style="padding: 12px 0; border-bottom: 1px solid #f0f0f0;">
-            <div class="option-label" style="font-weight: 500; font-size: 0.85rem; color: #444; margin-bottom: 8px;">Warna</div>
+        <div class="option-group" style="padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
+            <div class="option-label" style="font-weight: 500; font-size: 0.82rem; color: #444; margin-bottom: 8px;">Warna</div>
             <div class="option-buttons" style="display: flex; gap: 8px; flex-wrap: wrap;">
-                ${product.colors.map((c, idx) => `
-                    <button class="opt-btn ${idx === 0 ? 'active' : ''}" onclick="selectColor('${c}', this)" style="padding: 6px 14px; border-radius: 6px; font-size: 0.8rem;">${c}</button>
+                ${selectedDetailProduct.colors.map((c, idx) => `
+                    <button class="opt-btn ${idx === 0 ? 'active' : ''}" onclick="selectColor('${c}', this)" style="padding: 6px 12px; border-radius: 6px; font-size: 0.78rem;">${c}</button>
                 `).join('')}
             </div>
         </div>
 
-        <div class="option-group" style="padding: 12px 0; border-bottom: 1px solid #f0f0f0;">
+        <div class="option-group" style="padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <span class="option-label" style="font-weight: 500; font-size: 0.85rem; color: #444;">Ukuran</span>
-                <span onclick="alert('Panduan Ukuran:\\nEUR 38 = 24 cm\\nEUR 39 = 24.5 cm\\nEUR 40 = 25 cm\\nEUR 41 = 26 cm\\nEUR 42 = 26.5 cm')" style="font-size: 0.78rem; color: #888; cursor: pointer; text-decoration: underline;">Tabel Ukuran</span>
+                <span class="option-label" style="font-weight: 500; font-size: 0.82rem; color: #444;">Ukuran</span>
+                <span onclick="alert('Panduan Ukuran:\\nEUR 38 = 24 cm\\nEUR 39 = 24.5 cm\\nEUR 40 = 25 cm\\nEUR 41 = 26 cm\\nEUR 42 = 26.5 cm')" style="font-size: 0.75rem; color: #888; cursor: pointer; text-decoration: underline;">Tabel Ukuran</span>
             </div>
             <div class="option-buttons" style="display: flex; gap: 8px; flex-wrap: wrap;">
                 ${formattedSizes.map((s, idx) => `
-                    <button class="opt-btn ${idx === 0 ? 'active' : ''}" onclick="selectSize('${s}', this)" style="padding: 8px 12px; border-radius: 6px; font-size: 0.78rem;">${s}</button>
+                    <button class="opt-btn ${idx === 0 ? 'active' : ''}" onclick="selectSize('${s}', this)" style="padding: 6px 10px; border-radius: 6px; font-size: 0.75rem;">${s}</button>
                 `).join('')}
             </div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0;">
-            <span style="font-weight: 500; font-size: 0.85rem; color: #444;">Jumlah</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="font-weight: 500; font-size: 0.82rem; color: #444;">Jumlah</span>
             <div style="display: flex; align-items: center; border: 1px solid #ddd; border-radius: 4px; overflow: hidden;">
-                <button onclick="changeQuantity(-1)" style="border: none; background: #f8f8f8; width: 32px; height: 32px; font-size: 1rem; font-weight: bold; cursor: pointer; color: #555;">-</button>
-                <span id="detail-quantity-val" style="width: 40px; text-align: center; font-size: 0.85rem; font-weight: bold;">1</span>
-                <button onclick="changeQuantity(1)" style="border: none; background: #f8f8f8; width: 32px; height: 32px; font-size: 1rem; font-weight: bold; cursor: pointer; color: #555;">+</button>
+                <button onclick="changeQuantity(-1)" style="border: none; background: #f8f8f8; width: 30px; height: 30px; font-size: 0.9rem; font-weight: bold; cursor: pointer; color: #555;">-</button>
+                <span id="detail-quantity-val" style="width: 36px; text-align: center; font-size: 0.82rem; font-weight: bold;">1</span>
+                <button onclick="changeQuantity(1)" style="border: none; background: #f8f8f8; width: 30px; height: 30px; font-size: 0.9rem; font-weight: bold; cursor: pointer; color: #555;">+</button>
             </div>
         </div>
 
-        <div style="margin-top: 20px;">
-            <button class="btn btn-buy" style="width: 100%; padding: 14px; font-size: 0.95rem; font-weight: bold; background-color: #e63946; color: white; border: none; border-radius: 8px; cursor: pointer;" onclick="addToCartFromDetail()">
+        <div style="margin-top: 15px;">
+            <button class="btn btn-buy" style="width: 100%; padding: 12px; font-size: 0.9rem; font-weight: bold; background-color: #e63946; color: white; border: none; border-radius: 8px; cursor: pointer;" onclick="confirmVariantSubmit('${mode}')">
                 Masukkan Keranjang
             </button>
         </div>
     `;
+
+    overlay.classList.add('active');
+}
+
+function closeVariantSheet(e) {
+    const overlay = document.getElementById('variant-sheet-overlay');
+    if (overlay) overlay.classList.remove('active');
+}
+
+function changeQuantity(delta) {
+    selectedQuantity = Math.max(1, selectedQuantity + delta);
+    const qtyEl = document.getElementById('detail-quantity-val');
+    if (qtyEl) qtyEl.innerText = selectedQuantity;
 }
 
 function selectColor(color, btn) {
@@ -303,29 +374,27 @@ function selectSize(size, btn) {
     btn.classList.add('active');
 }
 
-function addToCartFromDetail() {
+function confirmVariantSubmit(mode) {
     if (!selectedDetailProduct) return;
-    cart = getStoredCart();
 
-    for (let i = 0; i < selectedQuantity; i++) {
-        cart.push({
-            cartId: Date.now() + Math.random(),
-            product: selectedDetailProduct,
-            color: selectedColor,
-            size: selectedSize,
-            selected: true
-        });
+    if (mode === 'buy') {
+        localStorage.setItem('checkoutItems', JSON.stringify([selectedDetailProduct]));
+        window.location.href = 'checkout.html';
+    } else {
+        cart = getStoredCart();
+        for (let i = 0; i < selectedQuantity; i++) {
+            cart.push({
+                cartId: Date.now() + Math.random(),
+                product: selectedDetailProduct,
+                color: selectedColor,
+                size: selectedSize,
+                selected: true
+            });
+        }
+        saveCart(cart);
+        updateCartBadge();
+        window.location.href = 'cart.html';
     }
-
-    saveCart(cart);
-    updateCartBadge();
-    window.location.href = 'cart.html';
-}
-
-function directBuyFromDetail() {
-    if (!selectedDetailProduct) return;
-    localStorage.setItem('checkoutItems', JSON.stringify([selectedDetailProduct]));
-    window.location.href = 'checkout.html';
 }
 
 function addToCart(id) {
@@ -518,6 +587,13 @@ function processCheckout() {
     window.location.href = 'thankyou.html';
 }
 
+function clearOrderHistory() {
+    if (confirm("Apakah kamu yakin ingin menghapus semua riwayat pesanan?")) {
+        localStorage.removeItem('myOrders');
+        renderOrders();
+    }
+}
+
 function renderOrders() {
     myOrders = getStoredOrders();
     const container = document.getElementById('orders-container');
@@ -528,11 +604,18 @@ function renderOrders() {
         return;
     }
 
-    container.innerHTML = '';
+    let htmlContent = `
+        <div style="text-align: right; margin-bottom: 15px;">
+            <button onclick="clearOrderHistory()" style="background: #e63946; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; cursor: pointer;">
+                <i class="fas fa-trash"></i> Hapus Riwayat
+            </button>
+        </div>
+    `;
+
     myOrders.forEach(order => {
         let itemNames = order.items.map(i => i.name).join(', ');
         let payLabel = order.paymentMethod || "COD";
-        container.innerHTML += `
+        htmlContent += `
             <div class="order-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                     <strong style="font-size:0.85rem;">#${order.id}</strong>
@@ -543,6 +626,8 @@ function renderOrders() {
             </div>
         `;
     });
+
+    container.innerHTML = htmlContent;
 }
 
 function switchAdminDashTab(tab) {
