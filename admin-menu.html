@@ -18,15 +18,29 @@
     </header>
 
     <div id="admin-main-menu" class="page-view active">
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 65vh; text-align: center;">
-            <p style="font-size: 1.2rem; color: var(--dark-green); font-weight: 700; margin-bottom: 25px;">
-                Silakan pilih salah satu menu
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 65vh; text-align: center; padding: 20px 0;">
+            <p style="font-size: 1.2rem; color: var(--dark-green); font-weight: 700; margin-bottom: 20px;">
+                Silakan pilih salah satu menu admin:
             </p>
-            <button class="admin-big-btn" onclick="window.location.href='admin-dashboard.html'">
-                <i class="fas fa-tachometer-alt"></i> Dashboard
+            
+            <button class="admin-big-btn" onclick="window.location.href='admin-dashboard.html?tab=input'">
+                <i class="fas fa-tachometer-alt"></i> Dashboard & Input Barang
             </button>
+            
+            <button class="admin-big-btn" onclick="window.location.href='admin-dashboard.html?tab=supplier'">
+                <i class="fas fa-truck-loading"></i> Edit / Input Supplier
+            </button>
+
+            <button class="admin-big-btn" onclick="window.location.href='admin-dashboard.html?tab=prices'">
+                <i class="fas fa-tags"></i> View & Ubah Harga Barang
+            </button>
+
+            <button class="admin-big-btn" onclick="window.location.href='admin-dashboard.html?tab=orders'">
+                <i class="fas fa-shopping-cart"></i> Lihat Pembelian
+            </button>
+
             <button class="admin-big-btn" onclick="window.location.href='admin-reports.html'">
-                <i class="fas fa-file-invoice-dollar"></i> Laporan
+                <i class="fas fa-file-invoice-dollar"></i> Laporan Penjualan
             </button>
         </div>
     </div>
