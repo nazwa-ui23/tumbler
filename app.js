@@ -25,9 +25,10 @@ let defaultProducts = [
 ];
 
 let defaultSuppliers = [
-    { id: 1, name: "PT Nike Distribution Indonesia", phone: "+62 811-2233-4455", address: "Kawasan Industri Pulogadung, Jakarta Timur", category: "Nike Series" },
-    { id: 2, name: "CV Footwear Jaya Utama", phone: "+62 812-9988-7766", address: "Jl. Industri Sepatu No. 12, Bandung", category: "Puma & Vans" },
-    { id: 3, name: "Global Sport Supplier Ltd", phone: "+62 857-1122-3344", address: "Komplek Pergudangan Sunter, Jakarta Utara", category: "New Balance" }
+    { id: 1, name: "PT Wijaya Kusuma", phone: "+62 0987-654-7907", address: "Jl. Mangkang Kulon SMK Texmaco Semarang", category: "Nike Series" },
+    { id: 2, name: "PT Nike Distribution Indonesia", phone: "+62 811-2233-4455", address: "Kawasan Industri Pulogadung, Jakarta Timur", category: "Nike Series" },
+    { id: 3, name: "CV Footwear Jaya Utama", phone: "+62 812-9988-7766", address: "Jl. Industri Sepatu No. 12, Bandung", category: "Puma & Vans" },
+    { id: 4, name: "Global Sport Supplier Ltd", phone: "+62 857-1122-3344", address: "Komplek Pergudangan Sunter, Jakarta Utara", category: "New Balance" }
 ];
 
 function getStoredProfile() {
@@ -217,7 +218,6 @@ function openProductDetail(id) {
     window.location.href = 'product-detail.html';
 }
 
-/* 1. HALAMAN DETAIL UTAMA */
 function renderProductDetailPage(id) {
     products = getStoredProducts();
     const product = products.find(p => p.id === id);
@@ -285,7 +285,6 @@ function renderProductDetailPage(id) {
     `;
 }
 
-/* 2. POPUP SETENGAH LAYAR DI BAWAH */
 function openVariantSheet(mode) {
     if (!selectedDetailProduct) return;
     const overlay = document.getElementById('variant-sheet-overlay');
@@ -580,10 +579,12 @@ function openCheckoutPage() {
     totalEl.innerText = formatRupiah(grandTotal);
 }
 
+/* REVISI PESANAN: Menyimpan data pembeli secara lengkap */
 function processCheckout() {
     let checkoutItems = JSON.parse(localStorage.getItem('checkoutItems')) || [];
     let itemTotal = checkoutItems.reduce((sum, item) => sum + item.price, 0);
     let grandTotal = itemTotal + SHIPPING_FEE;
+    let buyer = getStoredProfile();
 
     myOrders = getStoredOrders();
     myOrders.unshift({
@@ -592,7 +593,10 @@ function processCheckout() {
         total: grandTotal,
         paymentMethod: currentPaymentMethod,
         status: "Dikemas",
-        date: new Date().toLocaleDateString('id-ID')
+        date: new Date().toLocaleDateString('id-ID'),
+        buyerName: buyer.username || "Azariya",
+        buyerPhone: buyer.phone || "+62 812-3456-7890",
+        buyerAddress: buyer.address || "Jl. Cempaka Indah No. 45, Jakarta"
     });
     saveOrders(myOrders);
 
@@ -609,6 +613,7 @@ function clearOrderHistory() {
     }
 }
 
+/* REVISI HALAMAN PESANAN PEMBELI: Menampilkan Nama, No Telp, Alamat */
 function renderOrders() {
     myOrders = getStoredOrders();
     const container = document.getElementById('orders-container');
@@ -630,14 +635,31 @@ function renderOrders() {
     myOrders.forEach(order => {
         let itemNames = order.items.map(i => i.name).join(', ');
         let payLabel = order.paymentMethod || "COD";
+        let buyerName = order.buyerName || userProfile.username;
+        let buyerPhone = order.buyerPhone || userProfile.phone;
+        let buyerAddress = order.buyerAddress || userProfile.address;
+
         htmlContent += `
-            <div class="order-card">
+            <div class="order-card" style="margin-bottom: 15px; background: #fff; border-radius: 10px; padding: 14px; border-left: 4px solid var(--primary-green); box-shadow: 0 2px 5px rgba(0,0,0,0.03);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <strong style="font-size:0.85rem;">#${order.id}</strong>
-                    <span class="order-status-badge"><i class="fas fa-box"></i> ${order.status}</span>
+                    <strong style="font-size:0.9rem;">#${order.id}</strong>
+                    <span class="order-status-badge" style="background: var(--light-green); color: var(--dark-green); padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">
+                        <i class="fas fa-box"></i> ${order.status}
+                    </span>
                 </div>
-                <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">${itemNames} (Inc. Ongkir Rp 5.000)</div>
-                <div style="font-size:0.85rem; font-weight:bold; color:var(--dark-green);">${formatRupiah(order.total)} (${payLabel})</div>
+                
+                <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px; border-bottom: 1px dashed #eee; padding-bottom: 6px;">
+                    <strong>Produk:</strong> ${itemNames} (Inc. Ongkir Rp 5.000)
+                </div>
+
+                <div style="font-size:0.78rem; color:#444; background: #f9f9f9; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+                    <div><i class="fas fa-user" style="color:var(--primary-green);"></i> <strong>Pembeli:</strong> ${buyerName} (${buyerPhone})</div>
+                    <div style="margin-top: 3px;"><i class="fas fa-map-marker-alt" style="color:var(--primary-green);"></i> <strong>Alamat:</strong> ${buyerAddress}</div>
+                </div>
+
+                <div style="font-size:0.88rem; font-weight:bold; color:var(--dark-green); text-align: right;">
+                    ${formatRupiah(order.total)} (${payLabel})
+                </div>
             </div>
         `;
     });
@@ -658,19 +680,16 @@ function switchAdminDashTab(tab) {
     const btnPrices = document.getElementById('btn-tab-prices');
     const btnOrders = document.getElementById('btn-tab-orders');
 
-    // Sembunyikan seluruh kontainer terlebih dahulu
     if(inputContainer) inputContainer.style.display = 'none';
     if(viewContainer) viewContainer.style.display = 'none';
     if(supplierContainer) supplierContainer.style.display = 'none';
     if(pricesContainer) pricesContainer.style.display = 'none';
     if(ordersContainer) ordersContainer.style.display = 'none';
 
-    // Reset warna tombol
     [btnInput, btnView, btnSupplier, btnPrices, btnOrders].forEach(btn => {
         if (btn) btn.style.backgroundColor = 'var(--accent-green)';
     });
 
-    // Tampilkan sesuai tab aktif
     if (tab === 'input' && inputContainer && btnInput) {
         inputContainer.style.display = 'block';
         btnInput.style.backgroundColor = 'var(--dark-green)';
@@ -781,7 +800,6 @@ function renderAdminProductTable() {
     });
 }
 
-/* REVISI ADMIN: EDIT DESKRIPSI & HAPUS BARANG */
 function editProductDesc(id) {
     products = getStoredProducts();
     const product = products.find(p => p.id === id);
@@ -805,7 +823,7 @@ function deleteAdminProduct(id) {
     }
 }
 
-/* REVISI ADMIN: SUPPPLIER LOGIC */
+/* REVISI SUPPLIER: Tambah, Edit & Hapus Supplier */
 function handleAdminAddSupplier(e) {
     e.preventDefault();
     const name = document.getElementById('admin-sup-name').value;
@@ -841,7 +859,7 @@ function renderAdminSupplierTable() {
 
     tbody.innerHTML = '';
     if (suppliers.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Belum ada supplier tersimpan.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Belum ada supplier tersimpan.</td></tr>`;
         return;
     }
 
@@ -853,12 +871,52 @@ function renderAdminSupplierTable() {
                 <td>${s.phone}</td>
                 <td>${s.category}</td>
                 <td>${s.address}</td>
+                <td style="text-align: center;">
+                    <button style="background: #f39c12; color: #fff; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; margin-bottom: 4px;" onclick="editSupplier(${s.id})">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button style="background: #e63946; color: #fff; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem;" onclick="deleteSupplier(${s.id})">
+                        <i class="fas fa-trash"></i> Hapus
+                    </button>
+                </td>
             </tr>
         `;
     });
 }
 
-/* REVISI ADMIN: VIEW HARGA BARANG LOGIC */
+function editSupplier(id) {
+    suppliers = getStoredSuppliers();
+    const sup = suppliers.find(s => s.id === id);
+    if (!sup) return;
+
+    const newName = prompt("Ubah Nama Supplier / PT:", sup.name);
+    if (newName === null) return;
+    const newPhone = prompt("Ubah No Telepon:", sup.phone);
+    if (newPhone === null) return;
+    const newCategory = prompt("Ubah Kategori Produk:", sup.category);
+    if (newCategory === null) return;
+    const newAddress = prompt("Ubah Alamat Supplier:", sup.address);
+    if (newAddress === null) return;
+
+    sup.name = newName.trim() || sup.name;
+    sup.phone = newPhone.trim() || sup.phone;
+    sup.category = newCategory.trim() || sup.category;
+    sup.address = newAddress.trim() || sup.address;
+
+    saveSuppliers(suppliers);
+    renderAdminSupplierTable();
+    alert("Data supplier berhasil diperbarui!");
+}
+
+function deleteSupplier(id) {
+    if (confirm("Apakah kamu yakin ingin menghapus supplier ini?")) {
+        suppliers = getStoredSuppliers().filter(s => s.id !== id);
+        saveSuppliers(suppliers);
+        renderAdminSupplierTable();
+        alert("Supplier berhasil dihapus!");
+    }
+}
+
 function renderAdminPricesTable() {
     products = getStoredProducts();
     const tbody = document.getElementById('admin-prices-table-body');
@@ -895,7 +953,7 @@ function updateProductPrice(id) {
     }
 }
 
-/* REVISI ADMIN: LIHAT PEMBELIAN/TRANSAKSI LOGIC */
+/* REVISI PEMBELIAN ADMIN: Mengubah Status Pengiriman dan Melihat Identitas Pembeli */
 function renderAdminOrdersTable() {
     myOrders = getStoredOrders();
     const tbody = document.getElementById('admin-orders-table-body');
@@ -903,22 +961,50 @@ function renderAdminOrdersTable() {
 
     tbody.innerHTML = '';
     if (myOrders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Belum ada transaksi pembelian masuk.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Belum ada transaksi pembelian masuk.</td></tr>`;
         return;
     }
 
-    myOrders.forEach(o => {
+    myOrders.forEach((o, index) => {
         let itemsStr = o.items.map(i => i.name).join(', ');
+        let buyerName = o.buyerName || userProfile.username;
+        let buyerPhone = o.buyerPhone || userProfile.phone;
+        let buyerAddress = o.buyerAddress || userProfile.address;
+
         tbody.innerHTML += `
             <tr>
                 <td><strong>#${o.id}</strong></td>
                 <td>${o.date || '-'}</td>
+                <td>
+                    <strong>${buyerName}</strong><br>
+                    <small style="color:#666;">${buyerPhone}</small><br>
+                    <small style="color:#888;">${buyerAddress}</small>
+                </td>
                 <td>${itemsStr}</td>
-                <td>${o.paymentMethod || 'COD'}</td>
-                <td style="color: var(--dark-green); font-weight: bold;">${formatRupiah(o.total)}</td>
+                <td style="color: var(--dark-green); font-weight: bold;">${formatRupiah(o.total)} (${o.paymentMethod || 'COD'})</td>
+                <td>
+                    <span style="font-weight:bold; color:var(--dark-green);">${o.status}</span>
+                </td>
+                <td>
+                    <select onchange="updateOrderStatus(${index}, this.value)" style="padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; border: 1px solid var(--primary-green); cursor: pointer;">
+                        <option value="Dikemas" ${o.status === 'Dikemas' ? 'selected' : ''}>Dikemas</option>
+                        <option value="Dikirim" ${o.status === 'Dikirim' ? 'selected' : ''}>Dikirim</option>
+                        <option value="Selesai" ${o.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                    </select>
+                </td>
             </tr>
         `;
     });
+}
+
+function updateOrderStatus(orderIndex, newStatus) {
+    myOrders = getStoredOrders();
+    if (myOrders[orderIndex]) {
+        myOrders[orderIndex].status = newStatus;
+        saveOrders(myOrders);
+        alert("Status pesanan #" + myOrders[orderIndex].id + " berhasil diubah menjadi: " + newStatus);
+        renderAdminOrdersTable();
+    }
 }
 
 function showReportType(type) {
