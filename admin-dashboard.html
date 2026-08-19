@@ -18,22 +18,33 @@
     </header>
 
     <div id="admin-dashboard-view" class="page-view active">
-        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: 0 auto 15px auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 800px; margin: 0 auto 15px auto;">
             <button class="btn-back-nav" onclick="window.location.href='admin-menu.html'">
                 <i class="fas fa-arrow-left"></i> Sebelumnya
             </button>
             <span style="font-size: 0.9rem; font-weight: bold; color: var(--dark-green);">Dashboard Admin</span>
         </div>
 
-        <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
-            <button class="admin-sub-btn" id="btn-tab-input" onclick="switchAdminDashTab('input')">
+        <!-- REVISI TAB SUB-MENU DI ADMIN DASHBOARD -->
+        <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+            <button class="admin-sub-btn" id="btn-tab-input" style="min-width: 120px; padding: 10px 14px; font-size: 0.82rem;" onclick="switchAdminDashTab('input')">
                 <i class="fas fa-plus-circle"></i> Input Barang
             </button>
-            <button class="admin-sub-btn" id="btn-tab-view" style="background-color: var(--accent-green);" onclick="switchAdminDashTab('view')">
+            <button class="admin-sub-btn" id="btn-tab-view" style="min-width: 120px; padding: 10px 14px; font-size: 0.82rem; background-color: var(--accent-green);" onclick="switchAdminDashTab('view')">
                 <i class="fas fa-boxes"></i> View Produk
+            </button>
+            <button class="admin-sub-btn" id="btn-tab-supplier" style="min-width: 120px; padding: 10px 14px; font-size: 0.82rem; background-color: var(--accent-green);" onclick="switchAdminDashTab('supplier')">
+                <i class="fas fa-truck-loading"></i> Supplier
+            </button>
+            <button class="admin-sub-btn" id="btn-tab-prices" style="min-width: 120px; padding: 10px 14px; font-size: 0.82rem; background-color: var(--accent-green);" onclick="switchAdminDashTab('prices')">
+                <i class="fas fa-tags"></i> Harga Barang
+            </button>
+            <button class="admin-sub-btn" id="btn-tab-orders" style="min-width: 120px; padding: 10px 14px; font-size: 0.82rem; background-color: var(--accent-green);" onclick="switchAdminDashTab('orders')">
+                <i class="fas fa-shopping-cart"></i> Lihat Pembelian
             </button>
         </div>
 
+        <!-- FORM INPUT BARANG -->
         <div id="admin-sub-input" class="admin-card-container">
             <h3 style="color: var(--dark-green); margin-bottom: 15px; font-size: 1.1rem; text-align: center;">
                 <i class="fas fa-box-open"></i> Form Input Barang Baru
@@ -65,7 +76,8 @@
             </form>
         </div>
 
-        <div id="admin-sub-view" class="admin-card-container" style="display: none;">
+        <!-- VIEW PRODUK DENGAN REVISI TOMBOL HAPUS DAN EDIT DESKRIPSI -->
+        <div id="admin-sub-view" class="admin-card-container" style="display: none; max-width: 800px;">
             <h3 style="color: var(--dark-green); margin-bottom: 15px; font-size: 1.1rem; text-align: center;">
                 <i class="fas fa-list"></i> Daftar Seluruh Produk Toko
             </h3>
@@ -78,9 +90,95 @@
                             <th>Harga</th>
                             <th>Terjual</th>
                             <th>Rating</th>
+                            <th style="text-align: center;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="admin-product-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- REVISI TAB 3: PENGELOLAAN SUPPLIER -->
+        <div id="admin-sub-supplier" class="admin-card-container" style="display: none; max-width: 800px;">
+            <h3 style="color: var(--dark-green); margin-bottom: 15px; font-size: 1.1rem; text-align: center;">
+                <i class="fas fa-truck-loading"></i> Tambah & View Supplier
+            </h3>
+            <form onsubmit="handleAdminAddSupplier(event)" style="margin-bottom: 25px; background: #fafafa; padding: 15px; border-radius: 8px; border: 1px solid var(--light-green);">
+                <div class="form-group">
+                    <label>Nama Supplier / PT:</label>
+                    <input type="text" id="admin-sup-name" class="form-input" placeholder="contoh: PT Nike Distribution" required>
+                </div>
+                <div class="form-group">
+                    <label>Nomor Telepon Kontak:</label>
+                    <input type="text" id="admin-sup-phone" class="form-input" placeholder="+62 812-xxxx-xxxx" required>
+                </div>
+                <div class="form-group">
+                    <label>Kategori Produk Supplier:</label>
+                    <input type="text" id="admin-sup-category" class="form-input" placeholder="contoh: Nike Series / Premium Leather" required>
+                </div>
+                <div class="form-group">
+                    <label>Alamat Supplier:</label>
+                    <textarea id="admin-sup-address" class="form-input" rows="2" placeholder="Masukkan alamat pabrik/gudang..." required></textarea>
+                </div>
+                <button type="submit" class="btn-auth" style="background-color: var(--dark-green); font-size: 0.85rem;">
+                    <i class="fas fa-plus"></i> Simpan Supplier
+                </button>
+            </form>
+
+            <h4 style="color: var(--dark-green); margin-bottom: 10px; font-size: 0.95rem;">Daftar Supplier Aktif:</h4>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Supplier</th>
+                            <th>Kontak</th>
+                            <th>Kategori</th>
+                            <th>Alamat</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-supplier-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- REVISI TAB 4: VIEW DAN EDIT HARGA BARANG -->
+        <div id="admin-sub-prices" class="admin-card-container" style="display: none; max-width: 800px;">
+            <h3 style="color: var(--dark-green); margin-bottom: 15px; font-size: 1.1rem; text-align: center;">
+                <i class="fas fa-tags"></i> Daftar Harga Produk Toko
+            </h3>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Foto</th>
+                            <th>Nama Produk</th>
+                            <th>Harga Saat Ini</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-prices-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- REVISI TAB 5: LIHAT PEMBELIAN -->
+        <div id="admin-sub-orders" class="admin-card-container" style="display: none; max-width: 800px;">
+            <h3 style="color: var(--dark-green); margin-bottom: 15px; font-size: 1.1rem; text-align: center;">
+                <i class="fas fa-shopping-cart"></i> Riwayat Pembelian dari Pelanggan
+            </h3>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID Transaksi</th>
+                            <th>Tanggal</th>
+                            <th>Produk Dibeli</th>
+                            <th>Metode Pembayaran</th>
+                            <th>Total Tagihan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-orders-table-body"></tbody>
                 </table>
             </div>
         </div>
@@ -103,6 +201,12 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             renderAdminProductTable();
+            // Cek parameter tab di URL jika datang dari halaman admin_menu.html
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+            if (tabParam) {
+                switchAdminDashTab(tabParam);
+            }
         });
     </script>
 </body>
