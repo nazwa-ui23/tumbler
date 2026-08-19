@@ -24,6 +24,12 @@ let defaultProducts = [
     { id: 8, name: "Nike Air Max 90", price: 1199000, isBestseller: false, image: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=500&q=80", desc: "Sepatu bergaya retro runner yang ramping dan ringan saat melangkah.", rating: 4.9, sold: 300, colors: ["Merah/Putih"], sizes: ["EU:38", "EU:39", "EU:40"] }
 ];
 
+let defaultSuppliers = [
+    { id: 1, name: "PT Nike Distribution Indonesia", phone: "+62 811-2233-4455", address: "Kawasan Industri Pulogadung, Jakarta Timur", category: "Nike Series" },
+    { id: 2, name: "CV Footwear Jaya Utama", phone: "+62 812-9988-7766", address: "Jl. Industri Sepatu No. 12, Bandung", category: "Puma & Vans" },
+    { id: 3, name: "Global Sport Supplier Ltd", phone: "+62 857-1122-3344", address: "Komplek Pergudangan Sunter, Jakarta Utara", category: "New Balance" }
+];
+
 function getStoredProfile() {
     return JSON.parse(localStorage.getItem('userProfile')) || defaultProfile;
 }
@@ -56,10 +62,19 @@ function saveOrders(orders) {
     localStorage.setItem('myOrders', JSON.stringify(orders));
 }
 
+function getStoredSuppliers() {
+    return JSON.parse(localStorage.getItem('suppliers')) || defaultSuppliers;
+}
+
+function saveSuppliers(sups) {
+    localStorage.setItem('suppliers', JSON.stringify(sups));
+}
+
 let products = getStoredProducts();
 let cart = getStoredCart();
 let myOrders = getStoredOrders();
 let userProfile = getStoredProfile();
+let suppliers = getStoredSuppliers();
 
 let selectedDetailProduct = null;
 let selectedColor = "";
@@ -263,7 +278,6 @@ function renderProductDetailPage(id) {
             <p style="font-size:0.8rem; color:#555; line-height:1.3;">Sepatunya sangat bagus dan pas di kaki. Bantalannya empuk banget dipake seharian, recommended seller!</p>
         </div>
 
-        <!-- BAR TOMBOL MENEMPEL DI BOTTOM 0 (PAS DI BAWAH LAYAR) -->
         <div style="position:fixed; bottom:0; left:0; right:0; max-width:500px; margin:0 auto; background:#fff; padding:12px 15px; border-top:1px solid #eee; display:flex; gap:10px; z-index:100; box-shadow: 0 -2px 10px rgba(0,0,0,0.05);">
             <button class="btn btn-cart" style="flex:1; padding:12px; font-size:0.85rem;" onclick="openVariantSheet('cart')"><i class="fas fa-cart-plus"></i> + Keranjang</button>
             <button class="btn btn-buy" style="flex:1; padding:12px; font-size:0.85rem; background:#004b36;" onclick="openVariantSheet('buy')">Beli Sekarang</button>
@@ -634,20 +648,48 @@ function renderOrders() {
 function switchAdminDashTab(tab) {
     const inputContainer = document.getElementById('admin-sub-input');
     const viewContainer = document.getElementById('admin-sub-view');
+    const supplierContainer = document.getElementById('admin-sub-supplier');
+    const pricesContainer = document.getElementById('admin-sub-prices');
+    const ordersContainer = document.getElementById('admin-sub-orders');
+
     const btnInput = document.getElementById('btn-tab-input');
     const btnView = document.getElementById('btn-tab-view');
+    const btnSupplier = document.getElementById('btn-tab-supplier');
+    const btnPrices = document.getElementById('btn-tab-prices');
+    const btnOrders = document.getElementById('btn-tab-orders');
 
-    if (tab === 'input') {
+    // Sembunyikan seluruh kontainer terlebih dahulu
+    if(inputContainer) inputContainer.style.display = 'none';
+    if(viewContainer) viewContainer.style.display = 'none';
+    if(supplierContainer) supplierContainer.style.display = 'none';
+    if(pricesContainer) pricesContainer.style.display = 'none';
+    if(ordersContainer) ordersContainer.style.display = 'none';
+
+    // Reset warna tombol
+    [btnInput, btnView, btnSupplier, btnPrices, btnOrders].forEach(btn => {
+        if (btn) btn.style.backgroundColor = 'var(--accent-green)';
+    });
+
+    // Tampilkan sesuai tab aktif
+    if (tab === 'input' && inputContainer && btnInput) {
         inputContainer.style.display = 'block';
-        viewContainer.style.display = 'none';
         btnInput.style.backgroundColor = 'var(--dark-green)';
-        btnView.style.backgroundColor = 'var(--accent-green)';
-    } else {
-        inputContainer.style.display = 'none';
+    } else if (tab === 'view' && viewContainer && btnView) {
         viewContainer.style.display = 'block';
-        btnInput.style.backgroundColor = 'var(--accent-green)';
         btnView.style.backgroundColor = 'var(--dark-green)';
         renderAdminProductTable();
+    } else if (tab === 'supplier' && supplierContainer && btnSupplier) {
+        supplierContainer.style.display = 'block';
+        btnSupplier.style.backgroundColor = 'var(--dark-green)';
+        renderAdminSupplierTable();
+    } else if (tab === 'prices' && pricesContainer && btnPrices) {
+        pricesContainer.style.display = 'block';
+        btnPrices.style.backgroundColor = 'var(--dark-green)';
+        renderAdminPricesTable();
+    } else if (tab === 'orders' && ordersContainer && btnOrders) {
+        ordersContainer.style.display = 'block';
+        btnOrders.style.backgroundColor = 'var(--dark-green)';
+        renderAdminOrdersTable();
     }
 }
 
@@ -726,6 +768,154 @@ function renderAdminProductTable() {
                 <td>${formatRupiah(p.price)}</td>
                 <td>${p.sold}</td>
                 <td>⭐ ${p.rating}</td>
+                <td style="text-align: center;">
+                    <button style="background: #f39c12; color: #fff; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; margin-bottom: 4px;" onclick="editProductDesc(${p.id})">
+                        <i class="fas fa-edit"></i> Edit Deskripsi
+                    </button>
+                    <button style="background: #e63946; color: #fff; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem;" onclick="deleteAdminProduct(${p.id})">
+                        <i class="fas fa-trash"></i> Hapus
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+/* REVISI ADMIN: EDIT DESKRIPSI & HAPUS BARANG */
+function editProductDesc(id) {
+    products = getStoredProducts();
+    const product = products.find(p => p.id === id);
+    if (!product) return;
+
+    const newDesc = prompt("Masukkan deskripsi produk baru untuk: " + product.name, product.desc);
+    if (newDesc !== null && newDesc.trim() !== "") {
+        product.desc = newDesc.trim();
+        saveProducts(products);
+        renderAdminProductTable();
+        alert("Deskripsi produk berhasil diperbarui!");
+    }
+}
+
+function deleteAdminProduct(id) {
+    if (confirm("Apakah kamu yakin ingin menghapus produk ini dari toko?")) {
+        products = getStoredProducts().filter(p => p.id !== id);
+        saveProducts(products);
+        renderAdminProductTable();
+        alert("Produk berhasil dihapus!");
+    }
+}
+
+/* REVISI ADMIN: SUPPPLIER LOGIC */
+function handleAdminAddSupplier(e) {
+    e.preventDefault();
+    const name = document.getElementById('admin-sup-name').value;
+    const phone = document.getElementById('admin-sup-phone').value;
+    const address = document.getElementById('admin-sup-address').value;
+    const category = document.getElementById('admin-sup-category').value;
+
+    const newSupplier = {
+        id: Date.now(),
+        name: name,
+        phone: phone,
+        address: address,
+        category: category
+    };
+
+    suppliers = getStoredSuppliers();
+    suppliers.unshift(newSupplier);
+    saveSuppliers(suppliers);
+
+    document.getElementById('admin-sup-name').value = '';
+    document.getElementById('admin-sup-phone').value = '';
+    document.getElementById('admin-sup-address').value = '';
+    document.getElementById('admin-sup-category').value = '';
+
+    alert("Data supplier berhasil ditambahkan!");
+    renderAdminSupplierTable();
+}
+
+function renderAdminSupplierTable() {
+    suppliers = getStoredSuppliers();
+    const tbody = document.getElementById('admin-supplier-table-body');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+    if (suppliers.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Belum ada supplier tersimpan.</td></tr>`;
+        return;
+    }
+
+    suppliers.forEach((s, idx) => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${idx + 1}</td>
+                <td><strong>${s.name}</strong></td>
+                <td>${s.phone}</td>
+                <td>${s.category}</td>
+                <td>${s.address}</td>
+            </tr>
+        `;
+    });
+}
+
+/* REVISI ADMIN: VIEW HARGA BARANG LOGIC */
+function renderAdminPricesTable() {
+    products = getStoredProducts();
+    const tbody = document.getElementById('admin-prices-table-body');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+    products.forEach(p => {
+        tbody.innerHTML += `
+            <tr>
+                <td><img src="${p.image}" style="width: 40px; height: 40px; border-radius: 6px; object-fit: cover;"></td>
+                <td><strong>${p.name}</strong></td>
+                <td style="color: var(--dark-green); font-weight: bold;">${formatRupiah(p.price)}</td>
+                <td>
+                    <button style="background: var(--primary-green); color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem;" onclick="updateProductPrice(${p.id})">
+                        <i class="fas fa-coins"></i> Ubah Harga
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+function updateProductPrice(id) {
+    products = getStoredProducts();
+    const product = products.find(p => p.id === id);
+    if (!product) return;
+
+    const newPrice = prompt("Masukkan harga baru (Rp) untuk " + product.name, product.price);
+    if (newPrice !== null && !isNaN(newPrice) && parseInt(newPrice) >= 1000) {
+        product.price = parseInt(newPrice);
+        saveProducts(products);
+        renderAdminPricesTable();
+        alert("Harga produk berhasil diperbarui!");
+    }
+}
+
+/* REVISI ADMIN: LIHAT PEMBELIAN/TRANSAKSI LOGIC */
+function renderAdminOrdersTable() {
+    myOrders = getStoredOrders();
+    const tbody = document.getElementById('admin-orders-table-body');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+    if (myOrders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Belum ada transaksi pembelian masuk.</td></tr>`;
+        return;
+    }
+
+    myOrders.forEach(o => {
+        let itemsStr = o.items.map(i => i.name).join(', ');
+        tbody.innerHTML += `
+            <tr>
+                <td><strong>#${o.id}</strong></td>
+                <td>${o.date || '-'}</td>
+                <td>${itemsStr}</td>
+                <td>${o.paymentMethod || 'COD'}</td>
+                <td style="color: var(--dark-green); font-weight: bold;">${formatRupiah(o.total)}</td>
             </tr>
         `;
     });
