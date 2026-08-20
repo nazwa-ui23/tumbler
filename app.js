@@ -5,6 +5,7 @@ let selectedQuantity = 1;
 let defaultProfile = {
     email: "azariya.azariya@email.com",
     username: "Azariya",
+    password: "123",
     phone: "+62 812-3456-7890",
     address: "Jl. Cempaka Indah No. 45, Komplek Green Residence, Jakarta Selatan, 12410"
 };
@@ -119,8 +120,11 @@ function handleAuthStep1(e) {
 function handleAuthStep2(e) {
     e.preventDefault();
     const usernameInput = document.getElementById('input-username').value;
-    if (usernameInput.trim() !== '') {
+    const passwordInput = document.getElementById('input-password').value;
+
+    if (usernameInput.trim() !== '' && passwordInput.trim() !== '') {
         userProfile.username = usernameInput;
+        userProfile.password = passwordInput;
         saveProfile(userProfile);
         window.location.href = 'buyer-auth-step3.html';
     }
@@ -136,6 +140,20 @@ function handleAuthStep3(e) {
         userProfile.address = addressInput;
         saveProfile(userProfile);
         window.location.href = 'buyer-welcome.html';
+    }
+}
+
+function handleBuyerExistingLogin(e) {
+    e.preventDefault();
+    const emailInput = document.getElementById('login-email').value.trim();
+    const passwordInput = document.getElementById('login-password').value.trim();
+
+    userProfile = getStoredProfile();
+
+    if (emailInput === userProfile.email && passwordInput === userProfile.password) {
+        window.location.href = 'home.html';
+    } else {
+        document.getElementById('buyer-login-error').style.display = 'block';
     }
 }
 
@@ -579,7 +597,6 @@ function openCheckoutPage() {
     totalEl.innerText = formatRupiah(grandTotal);
 }
 
-/* REVISI PESANAN: Menyimpan data pembeli secara lengkap */
 function processCheckout() {
     let checkoutItems = JSON.parse(localStorage.getItem('checkoutItems')) || [];
     let itemTotal = checkoutItems.reduce((sum, item) => sum + item.price, 0);
@@ -613,7 +630,6 @@ function clearOrderHistory() {
     }
 }
 
-/* REVISI HALAMAN PESANAN PEMBELI: Menampilkan Nama, No Telp, Alamat */
 function renderOrders() {
     myOrders = getStoredOrders();
     const container = document.getElementById('orders-container');
@@ -823,7 +839,6 @@ function deleteAdminProduct(id) {
     }
 }
 
-/* REVISI SUPPLIER: Tambah, Edit & Hapus Supplier */
 function handleAdminAddSupplier(e) {
     e.preventDefault();
     const name = document.getElementById('admin-sup-name').value;
@@ -953,7 +968,6 @@ function updateProductPrice(id) {
     }
 }
 
-/* REVISI PEMBELIAN ADMIN: Mengubah Status Pengiriman dan Melihat Identitas Pembeli */
 function renderAdminOrdersTable() {
     myOrders = getStoredOrders();
     const tbody = document.getElementById('admin-orders-table-body');
