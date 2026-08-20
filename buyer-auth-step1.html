@@ -10,15 +10,22 @@
 <body>
     <div id="auth-step-1" class="auth-overlay active">
         <div class="auth-card">
-            <h2>Masuk ke AZARIYA</h2>
-            <p>Masukkan email aktif kamu untuk melanjutkan</p>
+            <h2>Buat Akun AZARIYA</h2>
+            <p>Masukkan email aktif kamu untuk pendaftaran akun baru</p>
             <form onsubmit="handleAuthStep1(event)">
                 <div class="form-group">
-                    <label for="input-email">Alamat Email</label>
+                    <label for="input-email">Alamat Email Baru</label>
                     <input type="email" id="input-email" class="form-input" placeholder="contoh: azariya@email.com" required>
                 </div>
-                <button type="submit" class="btn-auth">Lanjut <i class="fas fa-arrow-right"></i></button>
+                <button type="submit" class="btn-auth">Lanjut Buat Akun <i class="fas fa-arrow-right"></i></button>
             </form>
+
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--light-green); text-align: center;">
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">Sudah pernah mendaftar sebelumnya?</p>
+                <a href="buyer_login_existing.html" style="font-size: 0.85rem; font-weight: bold; color: var(--primary-green); text-decoration: underline; cursor: pointer;">
+                    Login ke akun yang sudah ada
+                </a>
+            </div>
         </div>
     </div>
     <script src="app.js"></script>
